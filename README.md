@@ -68,7 +68,6 @@ The code has built-in checks to ensure all necessary tools are installed and wil
 - **Missing Dependencies**: The script checks for and installs necessary tools like binwalk, foremost, strings, cabextract, python3, and pip. Ensure your system can install packages from the internet.
 - **Large Memory Dump Files**: Processing large memory dump files might require substantial disk space and time; not all carvers display progress. Be patient.
 - **Tool installation errors**: Verify your internet connection and ensure your system has the correct repositories configured.
-- **I don’t need a zip, I want to use a folder or other path for the findings**: You are able to modify the folder name on line 23, `output_dir=".output"` and prevent its compression and deletion by hashing (#) lines 201-204.
 
 ## Tool Sources
 **IMPORTANT**: Ensure to download tools from trusted sources.
