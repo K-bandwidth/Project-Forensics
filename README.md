@@ -1,5 +1,5 @@
 # Project-Forensics
-A shell script whose goal is to automate HDD and Memory Analysis. This is accomplished by utilising various forensic tools and automating the extraction and analysis of data from memory dumps
+In this project I'd like to present to you my take on a shell script whose goal is to automate HDD and Memory Analysis. This is accomplished by utilising various forensic tools and automating the extraction and analysis of data from memory dumps. it uses different carvers and has some redundancy, to help capture info that might be missed by another tool.
 
 [![Video Demonstration](https://img.youtube.com/vi/J1oS8VQSrmg/0.jpg)](https://youtu.be/J1oS8VQSrmg)
 
@@ -20,34 +20,43 @@ The following tools will be installed if missing:
 - python3
 - pip
 
-## Using the Code
-1. Save the `memory_carver.sh` script in a directory of your choice.
-2. Make the script executable:
-    ```bash
-    chmod +x memory_carver.sh
-    ```
-3. Run the script by specifying the path to your memory dump file:
-    ```bash
-    sudo ./memory_carver.sh /path/to/your/memory_dump.raw
-    ```
-4. Start your Kali machine and move `memory_carver.sh` into a folder you wish to use it from, along with your file.
-5. Open a terminal window and run the code by executing (the script requires root privilege to run properly):
-    ```bash
-    sudo ./memory_carver.sh <filename>
-    ```
-*must be executed as root*
 
-The code will create an output folder to store the results of the analysis, the folder is hidden as a default. See the “Troubleshooting” section to modify its behavior.
+### Script Workflow
+1. **User Input:**
+   - The script ensures it is run as root.
+   - The script prompts the user to specify the filename of the memory dump.
 
-The script will check if the necessary tools are installed and prompt you to install missing ones, including a check to see if you have a preferred version of Volatility to carve with. The script uses Python to run Volatility 3 as a default (see resources for more information).
+2. **System Preparation:**
+   - The script checks if the specified file exists.
+   - Creates an output directory `.output` to store extracted files and reports.
+   - Installs necessary tools (`file`, `binwalk`, `bulk_extractor`, `foremost`, `strings`, `cabextract`, `python3`, `pip`) if they are not already installed.
 
-*Note: input is not case sensitive*
+3. **Volatility Setup:**
+   - Prompts the user to specify if they have Volatility 3 installed.
+   - If Volatility 3 is not installed, it clones the Volatility 3 repository and installs it.
 
-If Volatility is not on the system, it will download it into the folder the script is run in.
+4. **Analysis:**
+   - **Volatility Analysis:**
+     - Runs `windows.info` to gather basic memory information.
+     - Identifies the operating system from the memory image.
+     - Extracts running processes using `windows.pslist`.
+     - Extracts network connections using `windows.netscan` (if supported by the OS).
+     - Extracts registry information using `windows.registry.hivelist`.
+   - **Bulk Extractor Analysis:**
+     - Runs Bulk Extractor to extract data.
+     - Checks for packets in `packets.pcap` and counts them.
+   - **Foremost Analysis:**
+     - Runs Foremost to extract data.
+   - **Binwalk Analysis:**
+     - Runs Binwalk to extract data.
+   - **Strings Extraction:**
+     - Extracts strings from the memory dump.
 
-If Volatility is installed and specified, the script will proceed with the RAM or HDD analysis:
-- RAM analysis
-- HDD analysis
+5. **Reporting:**
+   - Counts the number of files found by each tool.
+   - Creates a summary report with analysis details.
+   - Archives the output directory into a zip file.
+
 
 ## Output Files
 A `.zip` archive will be created, containing the carved files, along with scan reports and an overall summary of the file. 
